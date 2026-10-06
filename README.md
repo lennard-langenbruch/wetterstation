@@ -43,6 +43,7 @@ aus nicht in die Datenbank zurückgeschrieben.
 ## Lokal starten
 
 ```bash
+cd webanwendung
 npm install
 npm run dev        # predev exportiert die Datenbank nach src/data/readings.json
 ```
@@ -55,17 +56,20 @@ npm run build      # schreibt die statische Seite nach out/
 ## Projektaufbau
 
 ```
-data/wetterdaten.db          gesammelte Messwerte, Quelle der Historie
-scripts/export-readings.mjs  Datenbank -> src/data/readings.json, läuft vor dev und build
-src/lib/                     Datenzugriff und Formatierung, ohne React
-src/app/                     Routen: / (Historie), /live, /hardware
-src/app/components/          UI, "use client" nur wo der Browser gebraucht wird
-src/app/hooks/               die gemeinsame MQTT-Verbindung
-esp32_hardware.ino           Firmware der Wetterstation
-esp32_mock_wifi.ino          gleiches Payload über WLAN, zum Testen ohne SIM-Karte
+webanwendung/                Next.js-Webanwendung
+  data/wetterdaten.db          gesammelte Messwerte, Quelle der Historie
+  scripts/export-readings.mjs  Datenbank -> src/data/readings.json, läuft vor dev und build
+  src/lib/                     Datenzugriff und Formatierung, ohne React
+  src/app/                     Routen: / (Historie), /live, /hardware
+  src/app/components/          UI, "use client" nur wo der Browser gebraucht wird
+  src/app/hooks/               die gemeinsame MQTT-Verbindung
+firmware/                    ESP32-Sketches (Arduino: je Sketch ein gleichnamiger Ordner)
+  esp32_hardware/              Firmware der Wetterstation
+  esp32_mock_wifi/             gleiches Payload über WLAN, zum Testen ohne SIM-Karte
 ```
+
 
 ## Deployment
 
 Jeder Push auf `main` startet `.github/workflows/deploy.yml`: installieren, linten, bauen und
-`out/` auf GitHub Pages veröffentlichen.
+`webanwendung/out/` auf GitHub Pages veröffentlichen.
