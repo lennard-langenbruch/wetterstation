@@ -1,6 +1,6 @@
 # Mobile Wetterstation 
 
-##  [Live-Demo](https://lennard-langenbruch.github.io)
+##  [Live-Demo](lennard-langenbruch.github.io/wetterstation)
 
 <img width="1441" height="962" alt="grafik" src="https://github.com/user-attachments/assets/4a3c0b62-be3a-463f-a321-c2fff5a96ec8" />
 <p><sub><i>https://lennard-langenbruch.github.io</i></sub></p>
