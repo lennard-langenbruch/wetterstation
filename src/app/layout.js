@@ -2,7 +2,7 @@ import "@fontsource-variable/inter";
 import "./globals.css";
 import Providers from "./components/Providers";
 
-const siteUrl = "https://lennard-langenbruch.github.io";
+const siteUrl = "https://lennard-langenbruch.github.io/wetterstation";
 const description =
   "A battery-powered ESP32 weather station in Wuppertal publishes temperature, humidity, battery level and GPS position over LTE. This site shows the live feed and the recorded history.";
 

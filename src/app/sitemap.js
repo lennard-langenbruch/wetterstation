@@ -1,6 +1,6 @@
 export const dynamic = "force-static";
 
-const siteUrl = "https://lennard-langenbruch.github.io";
+const siteUrl = "https://lennard-langenbruch.github.io/wetterstation";
 
 export default function sitemap() {
   const lastModified = new Date();

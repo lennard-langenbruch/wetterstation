@@ -20,7 +20,7 @@ export default function InfoCard({ image, alt, eyebrow, title, text, groupLabel,
         <Box sx={{ aspectRatio: "750 / 422", bgcolor: "white" }}>
           <Box
             component="img"
-            src={image}
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${image}`}
             alt={alt}
             sx={{ display: "block", width: "100%", height: "100%", objectFit: "contain" }}
           />
