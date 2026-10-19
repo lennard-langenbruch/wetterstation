@@ -23,14 +23,14 @@ import useLiveReading from "../hooks/useLiveReading";
 import { accent } from "../accent";
 import { formatDate, formatShort, formatTime, isNum } from "@/lib/format";
 
-// recharts is around a third of this page's JavaScript and is below the fold, so it is
+// The chart library is a large part of this page's JavaScript and is below the fold, so it is
 // loaded after hydration instead of being part of the initial bundle.
 const TrendChart = dynamic(() => import("./TrendChart"), {
   ssr: false,
   loading: () => (
     <Box
       sx={{
-        height: 372,
+        height: 392,
         mb: 3,
         borderRadius: 3,
         border: "1px solid #e2e8f0",
