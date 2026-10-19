@@ -18,10 +18,8 @@ import {
 } from "@mui/material";
 import dynamic from "next/dynamic";
 import DownloadIcon from "@mui/icons-material/Download";
-import StatCard from "./StatCard";
 import useLiveReading from "../hooks/useLiveReading";
-import { accent } from "../accent";
-import { formatDate, formatShort, formatTime, isNum } from "@/lib/format";
+import { formatDate, formatTime, isNum } from "@/lib/format";
 
 // The chart library is a large part of this page's JavaScript and is below the fold, so it is
 // loaded after hydration instead of being part of the initial bundle.
@@ -30,7 +28,7 @@ const TrendChart = dynamic(() => import("./TrendChart"), {
   loading: () => (
     <Box
       sx={{
-        height: 392,
+        height: 432,
         mb: 3,
         borderRadius: 3,
         border: "1px solid #e2e8f0",
@@ -119,16 +117,15 @@ function BatteryBar({ value }) {
 }
 
 /**
- * History table, key figures and chart.
+ * History chart and table.
  * `readings` comes from the build-time export and is already in the HTML; readings that
  * arrive over MQTT while the page is open are prepended to it.
  */
 export default function HistoryView({ readings, series }) {
-  const { latest, connected, liveReadings } = useLiveReading();
+  const { liveReadings } = useLiveReading();
   const [page, setPage] = useState(1);
 
   const rows = useMemo(() => [...liveReadings, ...readings], [liveReadings, readings]);
-  const current = latest ?? readings[0] ?? null;
 
   const chartData = useMemo(
     () => [...series, ...[...liveReadings].reverse()],
@@ -141,42 +138,6 @@ export default function HistoryView({ readings, series }) {
 
   return (
     <>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: { xs: "repeat(2, minmax(0, 1fr))", md: "repeat(4, minmax(0, 1fr))" },
-          gap: 2,
-          mb: 3
-        }}
-      >
-        <StatCard
-          label="Temperature"
-          value={isNum(current?.temperature) ? current.temperature.toFixed(1) : null}
-          unit="°C"
-          hint={latest ? "live from the station" : "last recorded value"}
-        />
-        <StatCard
-          label="Humidity"
-          value={isNum(current?.humidity) ? current.humidity.toFixed(0) : null}
-          unit="%"
-          color="#0ca678"
-          hint={latest ? "live from the station" : "last recorded value"}
-        />
-        <StatCard
-          label="Battery"
-          value={isNum(current?.battery) ? current.battery.toFixed(0) : null}
-          unit="%"
-          color={isNum(current?.battery) && current.battery < 20 ? "#e03131" : accent.main}
-          hint={isNum(current?.battery) && current.battery < 20 ? "charge needed" : "of nominal capacity"}
-        />
-        <StatCard
-          label="Last reading"
-          compact
-          value={current ? formatShort(current.time) : null}
-          hint={connected ? "connected to the broker" : "waiting for the broker"}
-        />
-      </Box>
-
       <TrendChart data={chartData} />
 
       <Box sx={{ display: "flex", justifyContent: "flex-start", mb: 1.5 }}>

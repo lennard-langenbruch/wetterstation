@@ -18,7 +18,9 @@ export const metadata = {
 // Only the live part (MQTT, pagination, chart) runs in the browser.
 export default function Home() {
   const readings = getReadings();
-  const series = getChartSeries(readings);
+  // The chart only draws the window the visitor zooms to, so it can take full resolution;
+  // the limit only thins out the series once the database grows very large.
+  const series = getChartSeries(readings, 2000);
 
   return (
     <Box>
