@@ -7,7 +7,7 @@ import PageBackground from "../components/PageBackground";
 import SiteHeader from "../components/SiteHeader";
 
 export const metadata = {
-  title: "Hardware",
+  title: "README",
   description:
     "Hardware, setup and architecture of the mobile weather station, taken from the project README."
 };

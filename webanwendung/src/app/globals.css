@@ -18,6 +18,15 @@ body {
   overflow-x: hidden;
 }
 
+/* Scrollbars are hidden everywhere; scrolling with wheel, touch and keyboard still works. */
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   color: var(--ink);
   background: #ffffff;

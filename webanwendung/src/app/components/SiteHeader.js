@@ -9,7 +9,7 @@ import { accent } from "../accent";
 const items = [
   { key: "live", href: "/live", label: "Live Dashboard", short: "Live" },
   { key: "history", href: "/", label: "History", short: "History" },
-  { key: "hardware", href: "/hardware", label: "Hardware", short: "Hardware", icon: true }
+  { key: "hardware", href: "/hardware", label: "README", short: "README", icon: true }
 ];
 
 /**
