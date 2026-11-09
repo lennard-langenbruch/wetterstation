@@ -140,7 +140,16 @@ export default function HistoryView({ readings, series }) {
     <>
       <TrendChart data={chartData} />
 
-      <Box sx={{ display: "flex", justifyContent: "flex-start", mb: 1.5 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 1.5,
+          mb: 1.5
+        }}
+      >
         <Button
           variant="outlined"
           size="small"
@@ -150,6 +159,22 @@ export default function HistoryView({ readings, series }) {
         >
           Export all as JSON
         </Button>
+
+        <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1.5 }}>
+          <Typography variant="body2" sx={{ color: "text.secondary", ...numSx }}>
+            {rows.length === 0
+              ? "0 entries"
+              : `${(safePage - 1) * ROWS_PER_PAGE + 1}–${Math.min(safePage * ROWS_PER_PAGE, rows.length)} of ${rows.length}`}
+          </Typography>
+          <Pagination
+            count={pageCount}
+            page={safePage}
+            onChange={(event, value) => setPage(value)}
+            color="primary"
+            shape="rounded"
+            size="small"
+          />
+        </Box>
       </Box>
 
       <Paper
@@ -272,35 +297,6 @@ export default function HistoryView({ readings, series }) {
           {paginatedRows.length === 0 && (
             <Box sx={{ py: 6, textAlign: "center", color: "text.secondary" }}>No readings yet</Box>
           )}
-        </Box>
-
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "1fr auto 1fr" },
-            justifyItems: { xs: "center", sm: "stretch" },
-            alignItems: "center",
-            gap: 1,
-            px: 2,
-            py: 1.5,
-            borderTop: "1px solid #e2e8f0",
-            bgcolor: "#f8fafc"
-          }}
-        >
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {rows.length === 0
-              ? "0 entries"
-              : `${(safePage - 1) * ROWS_PER_PAGE + 1}–${Math.min(safePage * ROWS_PER_PAGE, rows.length)} of ${rows.length}`}
-          </Typography>
-          <Pagination
-            count={pageCount}
-            page={safePage}
-            onChange={(event, value) => setPage(value)}
-            color="primary"
-            shape="rounded"
-            size="small"
-            sx={{ order: { xs: -1, sm: 0 } }}
-          />
         </Box>
       </Paper>
     </>
