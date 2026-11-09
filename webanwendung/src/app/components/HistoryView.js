@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   Chip,
-  LinearProgress,
   Pagination,
   Paper,
   Table,
@@ -71,12 +70,6 @@ function temperatureColor(value) {
   return "error";
 }
 
-function batteryColor(value) {
-  if (value < 20) return "error";
-  if (value < 50) return "warning";
-  return "success";
-}
-
 const headCellSx = {
   bgcolor: "#f8fafc",
   color: "text.secondary",
@@ -94,24 +87,6 @@ function Empty() {
   return (
     <Box component="span" sx={{ color: "text.disabled" }}>
       –
-    </Box>
-  );
-}
-
-function BatteryBar({ value }) {
-  if (!isNum(value)) return <Empty />;
-  return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-      <LinearProgress
-        variant="determinate"
-        value={Math.min(100, Math.max(0, value))}
-        color={batteryColor(value)}
-        aria-label={`Battery ${value} percent`}
-        sx={{ flex: 1, height: 6, borderRadius: 3, bgcolor: "#e9eef3" }}
-      />
-      <Box component="span" sx={{ ...numSx, fontSize: 13, minWidth: 34, textAlign: "right" }}>
-        {value} %
-      </Box>
     </Box>
   );
 }
@@ -201,7 +176,6 @@ export default function HistoryView({ readings, series }) {
                 <TableCell sx={headCellSx}>Humidity</TableCell>
                 <TableCell sx={headCellSx} align="right">Latitude</TableCell>
                 <TableCell sx={headCellSx} align="right">Longitude</TableCell>
-                <TableCell sx={headCellSx}>Battery</TableCell>
               </TableRow>
             </TableHead>
 
@@ -240,15 +214,12 @@ export default function HistoryView({ readings, series }) {
                   <TableCell align="right" sx={{ ...numSx, color: "text.secondary" }}>
                     {isNum(row.lon) ? row.lon : <Empty />}
                   </TableCell>
-                  <TableCell sx={{ minWidth: 130 }}>
-                    <BatteryBar value={row.battery} />
-                  </TableCell>
                 </TableRow>
               ))}
 
               {paginatedRows.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} align="center" sx={{ py: 6, color: "text.secondary" }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 6, color: "text.secondary" }}>
                     No readings yet
                   </TableCell>
                 </TableRow>
@@ -287,9 +258,6 @@ export default function HistoryView({ readings, series }) {
                   <Box component="span" sx={{ color: "text.secondary" }}>Position </Box>
                   {isNum(row.lat) && isNum(row.lon) ? `${row.lat}, ${row.lon}` : "–"}
                 </Box>
-              </Box>
-              <Box sx={{ mt: 1.25 }}>
-                <BatteryBar value={row.battery} />
               </Box>
             </Box>
           ))}
