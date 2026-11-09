@@ -1,6 +1,8 @@
 import "@fontsource-variable/inter";
 import "./globals.css";
+import Box from "@mui/material/Box";
 import Providers from "./components/Providers";
+import SiteFooter from "./components/SiteFooter";
 
 const siteUrl = "https://lennard-langenbruch.github.io/wetterstation";
 const description =
@@ -42,7 +44,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          {/* Column layout so the footer sits at the bottom even on short pages */}
+          <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+            <Box sx={{ flex: 1 }}>{children}</Box>
+            <SiteFooter />
+          </Box>
+        </Providers>
       </body>
     </html>
   );
