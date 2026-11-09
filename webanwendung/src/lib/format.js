@@ -36,9 +36,14 @@ export const isNum = (value) => typeof value === "number" && Number.isFinite(val
 
 /** Turns anything the sensor may send into a number, or null when it is unusable. */
 export function toNumber(value) {
+  // Number("") is 0, so an empty string has to be caught before converting.
+  if (typeof value === "string" && value.trim() === "") return null;
   const n = typeof value === "string" ? Number(value) : value;
   return isNum(n) ? n : null;
 }
+
+/** Readings without a position are dropped from the history: both coordinates must be set. */
+export const hasPosition = (reading) => isNum(reading.lat) && isNum(reading.lon);
 
 export const formatValue = (value, unit, digits = 1) =>
   isNum(value) ? `${value.toFixed(digits)} ${unit}` : "–";

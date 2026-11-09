@@ -1,5 +1,5 @@
 import rawReadings from "@/data/readings.json";
-import { toNumber } from "./format";
+import { hasPosition, toNumber } from "./format";
 
 /**
  * Readings exported from the SQLite database at build time, newest first.
@@ -17,7 +17,7 @@ function normalise(row) {
 }
 
 export function getReadings() {
-  return rawReadings.map(normalise);
+  return rawReadings.map(normalise).filter(hasPosition);
 }
 
 /** Oldest to newest, thinned out to at most `limit` points for the chart. */

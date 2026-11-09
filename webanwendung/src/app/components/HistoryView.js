@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   Chip,
-  LinearProgress,
   Pagination,
   Paper,
   Table,
@@ -19,7 +18,7 @@ import {
 import dynamic from "next/dynamic";
 import DownloadIcon from "@mui/icons-material/Download";
 import useLiveReading from "../hooks/useLiveReading";
-import { formatDate, formatTime, isNum } from "@/lib/format";
+import { formatDate, formatTime, hasPosition, isNum } from "@/lib/format";
 
 // The chart library is a large part of this page's JavaScript and is below the fold, so it is
 // loaded after hydration instead of being part of the initial bundle.
@@ -71,12 +70,6 @@ function temperatureColor(value) {
   return "error";
 }
 
-function batteryColor(value) {
-  if (value < 20) return "error";
-  if (value < 50) return "warning";
-  return "success";
-}
-
 const headCellSx = {
   bgcolor: "#f8fafc",
   color: "text.secondary",
@@ -98,32 +91,17 @@ function Empty() {
   );
 }
 
-function BatteryBar({ value }) {
-  if (!isNum(value)) return <Empty />;
-  return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-      <LinearProgress
-        variant="determinate"
-        value={Math.min(100, Math.max(0, value))}
-        color={batteryColor(value)}
-        aria-label={`Battery ${value} percent`}
-        sx={{ flex: 1, height: 6, borderRadius: 3, bgcolor: "#e9eef3" }}
-      />
-      <Box component="span" sx={{ ...numSx, fontSize: 13, minWidth: 34, textAlign: "right" }}>
-        {value} %
-      </Box>
-    </Box>
-  );
-}
-
 /**
  * History chart and table.
  * `readings` comes from the build-time export and is already in the HTML; readings that
  * arrive over MQTT while the page is open are prepended to it.
  */
 export default function HistoryView({ readings, series }) {
-  const { liveReadings } = useLiveReading();
+  const { liveReadings: allLiveReadings } = useLiveReading();
   const [page, setPage] = useState(1);
+
+  // Same rule as the build-time readings: no position, no row.
+  const liveReadings = useMemo(() => allLiveReadings.filter(hasPosition), [allLiveReadings]);
 
   const rows = useMemo(() => [...liveReadings, ...readings], [liveReadings, readings]);
 
@@ -140,7 +118,16 @@ export default function HistoryView({ readings, series }) {
     <>
       <TrendChart data={chartData} />
 
-      <Box sx={{ display: "flex", justifyContent: "flex-start", mb: 1.5 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 1.5,
+          mb: 1.5
+        }}
+      >
         <Button
           variant="outlined"
           size="small"
@@ -150,6 +137,22 @@ export default function HistoryView({ readings, series }) {
         >
           Export all as JSON
         </Button>
+
+        <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1.5 }}>
+          <Typography variant="body2" sx={{ color: "text.secondary", ...numSx }}>
+            {rows.length === 0
+              ? "0 entries"
+              : `${(safePage - 1) * ROWS_PER_PAGE + 1}–${Math.min(safePage * ROWS_PER_PAGE, rows.length)} of ${rows.length}`}
+          </Typography>
+          <Pagination
+            count={pageCount}
+            page={safePage}
+            onChange={(event, value) => setPage(value)}
+            color="primary"
+            shape="rounded"
+            size="small"
+          />
+        </Box>
       </Box>
 
       <Paper
@@ -176,7 +179,6 @@ export default function HistoryView({ readings, series }) {
                 <TableCell sx={headCellSx}>Humidity</TableCell>
                 <TableCell sx={headCellSx} align="right">Latitude</TableCell>
                 <TableCell sx={headCellSx} align="right">Longitude</TableCell>
-                <TableCell sx={headCellSx}>Battery</TableCell>
               </TableRow>
             </TableHead>
 
@@ -215,15 +217,12 @@ export default function HistoryView({ readings, series }) {
                   <TableCell align="right" sx={{ ...numSx, color: "text.secondary" }}>
                     {isNum(row.lon) ? row.lon : <Empty />}
                   </TableCell>
-                  <TableCell sx={{ minWidth: 130 }}>
-                    <BatteryBar value={row.battery} />
-                  </TableCell>
                 </TableRow>
               ))}
 
               {paginatedRows.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} align="center" sx={{ py: 6, color: "text.secondary" }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 6, color: "text.secondary" }}>
                     No readings yet
                   </TableCell>
                 </TableRow>
@@ -263,44 +262,12 @@ export default function HistoryView({ readings, series }) {
                   {isNum(row.lat) && isNum(row.lon) ? `${row.lat}, ${row.lon}` : "–"}
                 </Box>
               </Box>
-              <Box sx={{ mt: 1.25 }}>
-                <BatteryBar value={row.battery} />
-              </Box>
             </Box>
           ))}
 
           {paginatedRows.length === 0 && (
             <Box sx={{ py: 6, textAlign: "center", color: "text.secondary" }}>No readings yet</Box>
           )}
-        </Box>
-
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "1fr auto 1fr" },
-            justifyItems: { xs: "center", sm: "stretch" },
-            alignItems: "center",
-            gap: 1,
-            px: 2,
-            py: 1.5,
-            borderTop: "1px solid #e2e8f0",
-            bgcolor: "#f8fafc"
-          }}
-        >
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {rows.length === 0
-              ? "0 entries"
-              : `${(safePage - 1) * ROWS_PER_PAGE + 1}–${Math.min(safePage * ROWS_PER_PAGE, rows.length)} of ${rows.length}`}
-          </Typography>
-          <Pagination
-            count={pageCount}
-            page={safePage}
-            onChange={(event, value) => setPage(value)}
-            color="primary"
-            shape="rounded"
-            size="small"
-            sx={{ order: { xs: -1, sm: 0 } }}
-          />
         </Box>
       </Paper>
     </>
