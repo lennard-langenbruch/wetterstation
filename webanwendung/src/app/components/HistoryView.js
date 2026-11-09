@@ -17,6 +17,8 @@ import {
 } from "@mui/material";
 import dynamic from "next/dynamic";
 import DownloadIcon from "@mui/icons-material/Download";
+import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
+import WaterDropOutlinedIcon from "@mui/icons-material/WaterDropOutlined";
 import useLiveReading from "../hooks/useLiveReading";
 import { formatDate, formatTime, hasPosition, isNum } from "@/lib/format";
 
@@ -68,17 +70,21 @@ const formatTemp = (value) => `${value.toFixed(1)} °C`;
 const formatCoord = (value) => value.toFixed(5);
 
 /** Humidity in the same pill style as the temperature, always in the accent blue. */
-function HumidityChip({ value }) {
+function HumidityChip({ value, icon }) {
   return (
     <Chip
       size="small"
       variant="outlined"
       color="primary"
+      icon={icon}
       label={`${value} %`}
-      sx={{ fontWeight: 600, fontVariantNumeric: "tabular-nums" }}
+      sx={{ fontWeight: 600, fontVariantNumeric: "tabular-nums", ...chipIconSx }}
     />
   );
 }
+
+// Small icon inside the mobile pills, same colour as the pill text
+const chipIconSx = { "& .MuiChip-icon": { fontSize: 15, ml: "6px", mr: "-2px", color: "inherit" } };
 
 function temperatureColor(value) {
   if (value < 10) return "info";
@@ -308,11 +314,14 @@ export default function HistoryView({ readings, series }) {
                       size="small"
                       variant="outlined"
                       color={temperatureColor(row.temperature)}
+                      icon={<DeviceThermostatIcon />}
                       label={formatTemp(row.temperature)}
-                      sx={{ fontWeight: 600, ...numSx }}
+                      sx={{ fontWeight: 600, ...numSx, ...chipIconSx }}
                     />
                   )}
-                  {isNum(row.humidity) && <HumidityChip value={row.humidity} />}
+                  {isNum(row.humidity) && (
+                    <HumidityChip value={row.humidity} icon={<WaterDropOutlinedIcon />} />
+                  )}
                 </Box>
               </Box>
             </Box>
