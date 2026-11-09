@@ -18,7 +18,7 @@ import {
 import dynamic from "next/dynamic";
 import DownloadIcon from "@mui/icons-material/Download";
 import useLiveReading from "../hooks/useLiveReading";
-import { formatDate, formatTime, isNum } from "@/lib/format";
+import { formatDate, formatTime, hasPosition, isNum } from "@/lib/format";
 
 // The chart library is a large part of this page's JavaScript and is below the fold, so it is
 // loaded after hydration instead of being part of the initial bundle.
@@ -97,8 +97,11 @@ function Empty() {
  * arrive over MQTT while the page is open are prepended to it.
  */
 export default function HistoryView({ readings, series }) {
-  const { liveReadings } = useLiveReading();
+  const { liveReadings: allLiveReadings } = useLiveReading();
   const [page, setPage] = useState(1);
+
+  // Same rule as the build-time readings: no position, no row.
+  const liveReadings = useMemo(() => allLiveReadings.filter(hasPosition), [allLiveReadings]);
 
   const rows = useMemo(() => [...liveReadings, ...readings], [liveReadings, readings]);
 
