@@ -273,8 +273,11 @@ export default function TrendChart({ data }) {
             {TITLE}
           </Typography>
           <Typography variant="caption" component="p" sx={{ color: "text.secondary" }}>
-            {visibleSpan} of {n} points · drag to pan, Ctrl/⌘ + scroll to zoom, click to
-            download as JPG
+            {visibleSpan} of {n} points
+            {/* Mouse and keyboard hints only make sense on larger screens */}
+            <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>
+              {" "}· drag to pan, Ctrl/⌘ + scroll to zoom, click to download as JPG
+            </Box>
           </Typography>
         </Box>
         <Box sx={{ display: "flex", flexShrink: 0 }}>
@@ -301,7 +304,7 @@ export default function TrendChart({ data }) {
         onPointerCancel={() => (dragRef.current = null)}
         onKeyDown={onKeyDown}
         sx={{
-          height: 300,
+          height: { xs: 240, sm: 300 },
           mt: 1.5,
           cursor: "grab",
           "&:active": { cursor: "grabbing" },
@@ -323,6 +326,8 @@ export default function TrendChart({ data }) {
               scaleType: "point",
               valueFormatter: formatShort,
               tickLabelStyle: { fontSize: 11, fill: "#64748b" },
+              // Extra room between date labels so they don't run into each other on phones
+              tickLabelMinGap: 24,
               disableTicks: true
             }
           ]}

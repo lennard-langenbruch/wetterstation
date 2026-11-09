@@ -28,7 +28,8 @@ export default function SiteHeader({ active }) {
         top: 0,
         zIndex: 1100,
         width: "100%",
-        height: 90,
+        // Lower on phones, where the sticky bar would otherwise take a lot of the screen
+        height: { xs: 64, md: 90 },
         px: { xs: 2, sm: 3 },
         color: "white",
         borderBottom: "1px solid rgba(255,255,255,0.12)",
@@ -60,9 +61,9 @@ export default function SiteHeader({ active }) {
             p: 0.5,
             borderRadius: 999,
             bgcolor: "rgba(255,255,255,0.10)",
-            border: "1px solid rgba(255,255,255,0.18)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)"
+            // No backdrop blur: the header is opaque anyway, and in a sticky bar the blur made
+            // mobile browsers paint the pill empty while scrolling
+            border: "1px solid rgba(255,255,255,0.18)"
           }}
         >
           {items.map(({ key, href, label, short, icon }) => {

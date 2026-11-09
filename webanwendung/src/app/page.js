@@ -29,7 +29,7 @@ export default function Home() {
 
       <Box
         component="main"
-        sx={{ minHeight: "calc(100vh - 90px)", px: { xs: 1.5, sm: 3 }, py: 6 }}
+        sx={{ minHeight: "calc(100vh - 90px)", px: { xs: 2, sm: 3 }, py: { xs: 4, sm: 6 } }}
       >
         <Box sx={{ maxWidth: 1000, mx: "auto" }}>
           <PageHeading

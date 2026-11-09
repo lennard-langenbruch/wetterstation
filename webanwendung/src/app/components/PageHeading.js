@@ -33,6 +33,7 @@ export default function PageHeading({ eyebrow, title, subtitle, action }) {
           component="h1"
           sx={{
             fontWeight: 700,
+            fontSize: { xs: 28, sm: 34 },
             letterSpacing: "-0.01em",
             lineHeight: 1.15,
             background: `linear-gradient(90deg, ${accent.ink} 0%, ${accent.main} 100%)`,
