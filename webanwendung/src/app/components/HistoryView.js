@@ -72,7 +72,7 @@ function temperatureColor(value) {
 
 const headCellSx = {
   bgcolor: "#f8fafc",
-  color: "text.secondary",
+  color: "text.primary",
   fontSize: 12,
   fontWeight: 700,
   letterSpacing: "0.06em",
@@ -193,7 +193,7 @@ export default function HistoryView({ readings, series }) {
                     "& td": { borderBottom: "1px solid #eef2f6", py: 1.5 }
                   }}
                 >
-                  <TableCell sx={{ ...numSx, fontWeight: 600 }}>{formatDate(row.time)}</TableCell>
+                  <TableCell sx={numSx}>{formatDate(row.time)}</TableCell>
                   <TableCell sx={{ ...numSx, color: "text.secondary" }}>{formatTime(row.time)}</TableCell>
                   <TableCell>
                     {isNum(row.temperature) ? (
