@@ -15,7 +15,9 @@ body {
   margin: 0;
   padding: 0;
   max-width: 100vw;
-  overflow-x: hidden;
+  /* clip instead of hidden: hidden turns body into a scroll container, which breaks the
+     sticky site header */
+  overflow-x: clip;
 }
 
 /* Scrollbars are hidden everywhere; scrolling with wheel, touch and keyboard still works. */

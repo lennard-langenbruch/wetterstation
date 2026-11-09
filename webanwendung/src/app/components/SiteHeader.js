@@ -23,6 +23,10 @@ export default function SiteHeader({ active }) {
     <Box
       component="header"
       sx={{
+        // Stays at the top while the page scrolls
+        position: "sticky",
+        top: 0,
+        zIndex: 1100,
         width: "100%",
         height: 90,
         px: { xs: 2, sm: 3 },
